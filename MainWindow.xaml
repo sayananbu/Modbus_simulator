@@ -29,7 +29,8 @@
             Background="#C2F3BE"
             CornerRadius="5"
             HorizontalAlignment="Left"
-            
+            BorderThickness="1"
+            BorderBrush="#000"
             >
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -52,7 +53,8 @@
                     Background="#fff"
                     FontSize="25"
                     FontFamily="Inter"
-                        Margin="0 0 5 0"
+                    Margin="0 0 5 0"
+                        BorderThickness="0" BorderBrush="Black"
                     >
                         <Button.Resources>
                             <Style TargetType="Border">
@@ -183,6 +185,7 @@
                                 <TextBlock
                                     Grid.Row="0"
                                     Text="State:"
+                                    FontWeight="Medium"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="20"
@@ -199,7 +202,7 @@
                                 <TextBlock
                                     Grid.Row="1"
                                     Text="Value:"
-                                    HorizontalAlignment="center"
+                                    HorizontalAlignment="Left"
                                     VerticalAlignment="Bottom"
                                     FontWeight="Medium"
                                     FontSize="20"
@@ -215,7 +218,7 @@
                                 <TextBlock
                                     Grid.Row="3"
                                     Text="Setpoint:"
-                                    HorizontalAlignment="Center"
+                                    HorizontalAlignment="Left"
                                     VerticalAlignment="Bottom"
                                     FontWeight="Medium"
                                     FontSize="20"
@@ -231,7 +234,7 @@
                                 <Button
                                     Content="Release"
                                     Grid.Row="5"
-                                    Margin="20"
+                                    Margin="15"
                                     Background="#fff"
                                     FontSize="16"
                                     FontWeight="Regular"
@@ -245,7 +248,7 @@
                                 <Button
                                     Content="Serviceability"
                                     Grid.Row="6"
-                                    Margin="20"
+                                    Margin="15"
                                     FontSize="16"
                                     FontWeight="Regular"
                                     FontFamily="Inter"
