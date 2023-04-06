@@ -14,3 +14,6 @@ C:\Users\User\source\repos\Modbus_simulator\obj\Debug\Modbus_simulator.csproj.Ge
 C:\Users\User\source\repos\Modbus_simulator\obj\Debug\Modbus_simulator.csproj.CoreCompileInputs.cache
 C:\Users\User\source\repos\Modbus_simulator\obj\Debug\Modbus_simulator.exe
 C:\Users\User\source\repos\Modbus_simulator\obj\Debug\Modbus_simulator.pdb
+C:\Users\User\source\repos\Modbus_simulator\bin\Debug\NModbus4.dll
+C:\Users\User\source\repos\Modbus_simulator\bin\Debug\NModbus4.xml
+C:\Users\User\source\repos\Modbus_simulator\obj\Debug\Modbus_simulator.csproj.CopyComplete
