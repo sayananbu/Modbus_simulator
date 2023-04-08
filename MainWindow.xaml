@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Modbus_simulator"
         mc:Ignorable="d"
         Title="Modbus Imitator" Height="600" Width="1000"
-        Background="#FFEEDA" Closing="Window_Closing"
+        Background="#FFEEDA" Closing="Window_Closing" MouseDown="RedirectFocus"
         >
     <Window.Resources>
         <LinearGradientBrush x:Key="MouseOverBrush" StartPoint="0,0" EndPoint="0,1">
@@ -135,7 +135,10 @@
             <Setter Property="Template" Value="{StaticResource VerticalScrollBarBlack}"/>
         </Style>
     </Window.Resources>
-    <Grid>
+    <Grid
+        Name="MainGrid"
+        Focusable="True"
+        >
         <Grid.RowDefinitions>
             <RowDefinition Height="7*"/>
             <RowDefinition/>
@@ -408,14 +411,14 @@
                                             Text="1.234"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
-                                            FontSize="18"
+                                            FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckFloatNumberInput"
                                             />
                                         <TextBox
                                             Grid.Column="2"
                                             Text="5"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
-                                            FontSize="18"
+                                            FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckIntNumberInput"
                                             />
                                     </Grid>
                                 </Border>
@@ -647,14 +650,14 @@
                                             Text="1.234"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
-                                            FontSize="18"
+                                            FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckFloatNumberInput"
                                             />
                                         <TextBox
                                             Grid.Column="2"
                                             Text="5"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
-                                            FontSize="18"
+                                            FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckIntNumberInput"
                                             />
                                     </Grid>
                                 </Border>
@@ -886,14 +889,14 @@
                                             Text="1.234"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
-                                            FontSize="18"
+                                            FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckFloatNumberInput"
                                             />
                                         <TextBox
                                             Grid.Column="2"
                                             Text="5"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
-                                            FontSize="18"
+                                            FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckIntNumberInput"
                                             />
                                     </Grid>
                                 </Border>

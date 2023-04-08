@@ -34,14 +34,19 @@ namespace Modbus_simulator
         }
         public void SlaveThread()
         {
-            using (SerialPort slavePort = new SerialPort("COM6", 9600, Parity.None, 8, StopBits.One))
+            try
             {
-                slavePort.Open();
-                byte unitID = 1;
-                slave = ModbusSerialSlave.CreateRtu(unitID, slavePort);
-                slave.DataStore = DataStoreFactory.CreateDefaultDataStore();
-                slave.Listen();
+                using (SerialPort slavePort = new SerialPort("COM6", 9600, Parity.None, 8, StopBits.One))
+                {
+                    slavePort.Open();
+                    byte unitID = 1;
+                    slave = ModbusSerialSlave.CreateRtu(unitID, slavePort);
+                    slave.DataStore = DataStoreFactory.CreateDefaultDataStore();
+                    slave.Listen();
+                }
             }
+            catch { }
+            
         }
         private void ConnectBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -50,7 +55,34 @@ namespace Modbus_simulator
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            slave.Dispose();
+            slave?.Dispose();
+        }
+        private void CheckFloatNumberInput(object sender, TextCompositionEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".")
+               && (!textBox.Text.Contains(".")
+               && textBox.Text.Length != 0)))
+            {
+                e.Handled = true;
+            }
+        }
+        private void CheckIntNumberInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!Char.IsDigit(e.Text, 0))
+            {
+                e.Handled = true;
+            }
+        }
+        private void RedirectFocus(object sender, MouseButtonEventArgs e)
+        {
+            MainGrid.Focus();
+        }
+        private void CheckEmptyInput(object sender, RoutedEventArgs e)
+        {
+            var textbox = (TextBox)sender;
+            string cleanText = textbox.Text.Replace(" ", string.Empty);
+            textbox.Text = cleanText.Length != 0 ? cleanText : "0";
         }
     }
 }
