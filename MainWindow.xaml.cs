@@ -24,38 +24,40 @@ namespace Modbus_simulator
     /// </summary>
     public partial class MainWindow : Window
     {
-        Thread flow;
-        ModbusSlave slave;
+        string[] bauds =
+        {
+            "2400", "4800", "9600", "14400", "19200", "38400", "56000", "57600"
+        };
         public MainWindow()
         {
             InitializeComponent();
-            flow = new Thread(SlaveThread);
-            flow.Start();
+            InitComPorts();
         }
-        public void SlaveThread()
+        
+        private void InitComPorts()
         {
-            try
+            var ports = SerialPort.GetPortNames().Where(item => item.Contains("COM"));
+            foreach (var port in ports)
             {
-                using (SerialPort slavePort = new SerialPort("COM6", 9600, Parity.None, 8, StopBits.One))
-                {
-                    slavePort.Open();
-                    byte unitID = 1;
-                    slave = ModbusSerialSlave.CreateRtu(unitID, slavePort);
-                    slave.DataStore = DataStoreFactory.CreateDefaultDataStore();
-                    slave.Listen();
-                }
+                portsList.Items.Add(port);
             }
-            catch { }
-            
+            portsList.SelectedIndex = 0;
+            foreach(var baud in bauds)
+            {
+                baudRates.Items.Add(baud);
+            }
+            baudRates.SelectedIndex = 0;
         }
         private void ConnectBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            var t = portsList.SelectedItem.ToString();
+            var l = baudRates.SelectedItem.ToString();
+            ((Wrapper)this.DataContext).CreateConnection(portsList.SelectedItem.ToString() , baudRates.SelectedItem.ToString() );
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            slave?.Dispose();
+            ((Wrapper)this.DataContext).DisposeConnection();
         }
         private void CheckFloatNumberInput(object sender, TextCompositionEventArgs e)
         {

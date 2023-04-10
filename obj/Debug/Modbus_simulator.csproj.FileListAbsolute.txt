@@ -36,3 +36,4 @@ C:\Users\Hyrule\source\repos\Modbus_simulator\obj\Debug\Modbus_simulator.csproj.
 C:\Users\Hyrule\source\repos\Modbus_simulator\obj\Debug\Modbus_simulator.csproj.CopyComplete
 C:\Users\Hyrule\source\repos\Modbus_simulator\obj\Debug\Modbus_simulator.exe
 C:\Users\Hyrule\source\repos\Modbus_simulator\obj\Debug\Modbus_simulator.pdb
+C:\Users\User\source\repos\Modbus_simulator\obj\Debug\GeneratedInternalTypeHelper.g.cs

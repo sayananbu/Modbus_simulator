@@ -16,7 +16,7 @@ namespace Modbus_simulator
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
-    class DeviceModel: ObservableObject
+    public class DeviceModel: ObservableObject
     {
         private static float ToFourDigits(float value)
         {
