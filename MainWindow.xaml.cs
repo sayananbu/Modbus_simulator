@@ -50,8 +50,6 @@ namespace Modbus_simulator
         }
         private void ConnectBtn_Click(object sender, RoutedEventArgs e)
         {
-            var t = portsList.SelectedItem.ToString();
-            var l = baudRates.SelectedItem.ToString();
             ((Wrapper)this.DataContext).CreateConnection(portsList.SelectedItem.ToString() , baudRates.SelectedItem.ToString() );
         }
 

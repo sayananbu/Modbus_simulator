@@ -305,26 +305,25 @@
                                     FontWeight="Medium"
                                     />
                                 <ProgressBar 
-                    Value="{Binding MainData.Value}"
-                    Minimum="{Binding MainData.MinSignalRange}"
-                    Maximum="{Binding MainData.MaxSignalRange}"
+                    Value="{Binding Device1.Value}"
+                    Minimum="{Binding Device1.MinRange}"
+                    Maximum="{Binding Device1.MaxRange}"
                     Width="40" 
                     Grid.Row="1"
                     Orientation="Vertical" 
                     BorderBrush="{x:Null}" 
                     Background="{x:Null}" 
-                    Foreground="{Binding ColorChange, Mode=OneWay}"
+                    Foreground="{Binding Device1.ColorChange}"
                     />
                                 <ScrollBar
                     Width="60" 
-                    Visibility="{Binding BottomPSVisibility}"
-                    Minimum="{Binding MainData.MinSignalRange}"
-                    Maximum="{Binding MainData.MaxSignalRange}"
+                    Minimum="{Binding Device1.MinRange}"
+                    Maximum="{Binding Device1.MaxRange}"
                     BorderBrush="{x:Null}" 
                     Background="{x:Null}"
                     Grid.Row="1"
-                    SmallChange="0.01" 
-                    Value="{Binding MainData.BottomPS.Value,Mode=OneWay}"
+                    SmallChange="0.00000001" 
+                    Value="{Binding Device1.Setpoint,Mode=OneWay}"
                     Style="{StaticResource ResourceKey=YellowScrollbar}"
                     IsEnabled="False"
                     />
@@ -366,6 +365,7 @@
                                             Width="auto"
                                             Height="auto"
                                             BorderThickness="1"
+                                            IsChecked="{Binding Device1.Ready}"
                                             >
                                             <CheckBox.LayoutTransform>
                                                 <ScaleTransform ScaleX="3" ScaleY="3"/>
@@ -406,14 +406,14 @@
                                     />
                                         <TextBox
                                             Grid.Column="0"
-                                            Text="1.234"
+                                            Text="{Binding Device1.Mantisse}"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
                                             FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckFloatNumberInput"
                                             />
                                         <TextBox
                                             Grid.Column="2"
-                                            Text="5"
+                                            Text="{Binding Device1.Power}"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
                                             FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckIntNumberInput"
@@ -430,8 +430,8 @@
                                     />
                                 <TextBlock
                                     Grid.Row="4"
-                                    Text="1.348•10⁵"
-                                    HorizontalAlignment="Center"
+                                    Text="{Binding Device1.StrSetpoint}"
+                                    HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="20"
                                     Margin="0 0 5 0"
@@ -460,6 +460,7 @@
                                             Width="auto"
                                             Height="auto"
                                             FontSize="70"
+                                            IsChecked="{Binding Device1.SetpointHold}"
                                             >
                                             <CheckBox.LayoutTransform>
                                                 <ScaleTransform ScaleX="3" ScaleY="3"/>
@@ -488,7 +489,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
-                    Text="R1c-1, uSv/h"
+                    Text="R1c-2, uSv/h"
                     FontSize="22"
                     FontWeight="DemiBold"
                     TextAlignment="Center" 
@@ -670,7 +671,7 @@
                                 <TextBlock
                                     Grid.Row="4"
                                     Text="1.348•10⁵"
-                                    HorizontalAlignment="Center"
+                                    HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="20"
                                     Margin="0 0 5 0"
@@ -727,7 +728,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
-                    Text="R1c-1, uSv/h"
+                    Text="X1c, 1 / cm²•s"
                     FontSize="22"
                     FontWeight="DemiBold"
                     TextAlignment="Center" 
@@ -909,7 +910,7 @@
                                 <TextBlock
                                     Grid.Row="4"
                                     Text="1.348•10⁵"
-                                    HorizontalAlignment="Center"
+                                    HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="20"
                                     Margin="0 0 5 0"

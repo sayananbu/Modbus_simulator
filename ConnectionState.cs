@@ -13,7 +13,7 @@ namespace Modbus_simulator
         private SolidColorBrush _errorState = new SolidColorBrush(Color.FromRgb(245, 139, 139));
         private SolidColorBrush _successState = new SolidColorBrush(Color.FromRgb(194, 243, 190));
         public SolidColorBrush ConnectionColorState { get { return _connectionColorState; }
-            set { 
+            private set { 
                 _connectionColorState = value; 
                 OnPropertyChanged("ConnectionColorState");
             }

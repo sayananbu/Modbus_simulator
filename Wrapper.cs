@@ -17,11 +17,15 @@ namespace Modbus_simulator
         public DeviceModel Device1 { get; private set; }
         public DeviceModel Device2 { get; private set; }
         public DeviceModel Device3 { get; private set; }
+        
         Thread flow;
         ModbusSlave slave;
         public Wrapper()
         {
+            var Top = (float)Math.Log10(2 * Math.Pow(10, 7));
+            var Low = (float)Math.Log10(1 * Math.Pow(10,-1));
             State = new ConnectionState();
+            Device1 = new DeviceModel(1, Top, Low);
         }
         public void DisposeConnection()
         {
@@ -33,7 +37,7 @@ namespace Modbus_simulator
             flow = new Thread(()=>SlaveThread(port,baud));
             flow.Start();
         }
-        public void SlaveThread(string port, string baud)
+        private void SlaveThread(string port, string baud)
         {
             try
             {
@@ -49,6 +53,7 @@ namespace Modbus_simulator
             }
             catch
             {
+                slave?.Dispose();
                 State.SetError();
             }
 
