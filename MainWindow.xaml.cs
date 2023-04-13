@@ -50,7 +50,7 @@ namespace Modbus_simulator
         }
         private void ConnectBtn_Click(object sender, RoutedEventArgs e)
         {
-            ((Wrapper)this.DataContext).CreateConnection(portsList.SelectedItem.ToString() , baudRates.SelectedItem.ToString() );
+            ((Wrapper)this.DataContext).CreateConnection(portsList.SelectedItem?.ToString() , baudRates.SelectedItem.ToString() );
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

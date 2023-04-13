@@ -33,9 +33,12 @@ namespace Modbus_simulator
         }
         public void CreateConnection(string port, string baud)
         {
-            slave?.Dispose();
-            flow = new Thread(()=>SlaveThread(port,baud));
-            flow.Start();
+            if(port.Length != 0)
+            {
+                slave?.Dispose();
+                flow = new Thread(() => SlaveThread(port, baud));
+                flow.Start();
+            }
         }
         private void SlaveThread(string port, string baud)
         {
