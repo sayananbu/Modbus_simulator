@@ -69,9 +69,10 @@ namespace Modbus_simulator
         }
         private void CheckIntNumberInput(object sender, TextCompositionEventArgs e)
         {
+            var textBox = (TextBox)sender;
             if (!Char.IsDigit(e.Text, 0))
             {
-                e.Handled = true;
+                if(!(e.Text[0] == '-' && !textBox.Text.Contains('-') && textBox.SelectionStart==0)) e.Handled = true;
             }
         }
         private void RedirectFocus(object sender, MouseButtonEventArgs e)
@@ -82,6 +83,7 @@ namespace Modbus_simulator
         {
             var textbox = (TextBox)sender;
             string cleanText = textbox.Text.Replace(" ", string.Empty);
+            if (cleanText.Length < 2 && cleanText.Contains("-")) cleanText = cleanText.Replace("-", string.Empty);
             textbox.Text = cleanText.Length != 0 ? cleanText : "0";
         }
     }

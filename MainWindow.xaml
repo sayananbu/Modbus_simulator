@@ -31,19 +31,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Rectangle Fill="#FFFFEA00" Height="4" Stroke="Black"></Rectangle>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="ScrollBarThumbStyleBlack" TargetType="{x:Type Thumb}">
-            <Setter Property="IsTabStop" Value="False"/>
-            <Setter Property="Focusable" Value="False"/>
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Rectangle Fill="#000000" Height="1" Stroke="Black"></Rectangle>
+                        <Rectangle Fill="#FFFFEA00" Height="4" Stroke="Black" StrokeThickness=".5" Margin="0"></Rectangle>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -56,7 +44,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition MaxHeight="1"/>
                 </Grid.RowDefinitions>
-                <Rectangle Fill="#000" Width="80" Grid.Row="0"/>
+                <Rectangle Fill="#000" Width="80" Grid.Row="0" Margin="0"/>
                 <Track Name="PART_Track" Grid.Row="1" 
                    >
                     <Track.Thumb>
@@ -64,15 +52,15 @@
                         </Thumb>
                     </Track.Thumb>
                 </Track>
-                <Rectangle Fill="#000" Width="80" Grid.Row="2"/>
+                <Rectangle Fill="#000" Width="80" Grid.Row="2" Margin="0"/>
             </Grid>
         </ControlTemplate>
         <ControlTemplate x:Key="VerticalScrollBarBlack" TargetType="{x:Type ScrollBar}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="2"/>
+                    <RowDefinition MaxHeight="1"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition MaxHeight="2"/>
+                    <RowDefinition MaxHeight="1"/>
                 </Grid.RowDefinitions>
                 <Rectangle Fill="#000" Width="80" Grid.Row="0"/>
                 <Track Name="PART_Track" Grid.Row="1" 
@@ -88,10 +76,7 @@
 
         <Style x:Key="YellowScrollbar" TargetType="{x:Type ScrollBar}">
             <Setter Property="Template" Value="{StaticResource VerticalScrollBarYellow}"/>
-        </Style>
-        <Style x:Key="RedScrollbar" TargetType="{x:Type ScrollBar}">
-            <Setter Property="Template" Value="{StaticResource VerticalScrollBarRed}"/>
-        </Style>
+        </Style> 
         <Style x:Key="BlackScrollbar" TargetType="{x:Type ScrollBar}">
             <Setter Property="Template" Value="{StaticResource VerticalScrollBarBlack}"/>
         </Style>
@@ -269,7 +254,7 @@
                     BorderBrush="{x:Null}" 
                     Background="{x:Null}" 
                     Foreground="{Binding Device1.ColorChange}" 
-                                    SmallChange="0.00000001" 
+                    SmallChange="0.00000001" 
                     />
                                 <ScrollBar
                     Width="60" 
@@ -386,7 +371,7 @@
                                     />
                                 <TextBlock
                                     Grid.Row="4"
-                                    Text="{Binding Device1.StrSetpoint}"
+                                    Text="{Binding Device1.FullSetpoint}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="20"
@@ -489,38 +474,26 @@
                                     FontWeight="Medium"
                                     />
                                 <ProgressBar 
-                    Value="{Binding MainData.Value}"
-                    Minimum="{Binding MainData.MinSignalRange}"
-                    Maximum="{Binding MainData.MaxSignalRange}"
+                    Value="{Binding Device2.Value}"
+                    Minimum="{Binding Device2.MinRange}"
+                    Maximum="{Binding Device2.MaxRange}"
                     Width="40" 
                     Grid.Row="1"
                     Orientation="Vertical" 
+                    SmallChange="0.00000001"
                     BorderBrush="{x:Null}" 
                     Background="{x:Null}" 
-                    Foreground="{Binding ColorChange, Mode=OneWay}"
+                    Foreground="{Binding Device2.ColorChange, Mode=OneWay}"
                     />
                                 <ScrollBar
                     Width="60" 
-                    Minimum="{Binding MainData.MinSignalRange}"
-                    Maximum="{Binding MainData.MaxSignalRange}"
-                    BorderBrush="{x:Null}" 
-                    Background="{x:Null}"
-                    Grid.Row="1"            
-                    SmallChange="0.01"
-                    Style="{StaticResource ResourceKey=BlackScrollbar}" 
-                    Value="{Binding MainData.HalfRangeValue}"
-                    IsEnabled="False"
-                    />
-                                <ScrollBar
-                    Width="60" 
-                    Visibility="{Binding BottomPSVisibility}"
-                    Minimum="{Binding MainData.MinSignalRange}"
-                    Maximum="{Binding MainData.MaxSignalRange}"
+                    Minimum="{Binding Device2.MinRange}"
+                    Maximum="{Binding Device2.MaxRange}"
                     BorderBrush="{x:Null}" 
                     Background="{x:Null}"
                     Grid.Row="1"
-                    SmallChange="0.01" 
-                    Value="{Binding MainData.BottomPS.Value,Mode=OneWay}"
+                    SmallChange="0.00000001" 
+                    Value="{Binding Device2.Setpoint,Mode=OneWay}"
                     Style="{StaticResource ResourceKey=YellowScrollbar}"
                     IsEnabled="False"
                     />
@@ -562,6 +535,7 @@
                                             Width="auto"
                                             Height="auto"
                                             BorderThickness="1"
+                                            IsChecked="{Binding Device2.Ready}"
                                             >
                                             <CheckBox.LayoutTransform>
                                                 <ScaleTransform ScaleX="3" ScaleY="3"/>
@@ -602,14 +576,14 @@
                                     />
                                         <TextBox
                                             Grid.Column="0"
-                                            Text="1.234"
+                                            Text="{Binding Device2.Mantisse}"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
                                             FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckFloatNumberInput"
                                             />
                                         <TextBox
                                             Grid.Column="2"
-                                            Text="5"
+                                            Text="{Binding Device2.Power}"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
                                             FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckIntNumberInput"
@@ -626,7 +600,7 @@
                                     />
                                 <TextBlock
                                     Grid.Row="4"
-                                    Text="1.348•10⁵"
+                                    Text="{Binding Device2.FullSetpoint}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="20"
@@ -656,6 +630,7 @@
                                             Width="auto"
                                             Height="auto"
                                             FontSize="70"
+                                            IsChecked="{Binding Device2.SetpointHold}"
                                             >
                                             <CheckBox.LayoutTransform>
                                                 <ScaleTransform ScaleX="3" ScaleY="3"/>
@@ -728,38 +703,26 @@
                                     FontWeight="Medium"
                                     />
                                 <ProgressBar 
-                    Value="{Binding MainData.Value}"
-                    Minimum="{Binding MainData.MinSignalRange}"
-                    Maximum="{Binding MainData.MaxSignalRange}"
+                    Value="{Binding Device3.Value}"
+                    Minimum="{Binding Device3.MinRange}"
+                    Maximum="{Binding Device3.MaxRange}"
                     Width="40" 
                     Grid.Row="1"
+                    SmallChange="0.00000001"
                     Orientation="Vertical" 
                     BorderBrush="{x:Null}" 
                     Background="{x:Null}" 
-                    Foreground="{Binding ColorChange, Mode=OneWay}"
+                    Foreground="{Binding Device3.ColorChange, Mode=OneWay}"
                     />
                                 <ScrollBar
                     Width="60" 
-                    Minimum="{Binding MainData.MinSignalRange}"
-                    Maximum="{Binding MainData.MaxSignalRange}"
-                    BorderBrush="{x:Null}" 
-                    Background="{x:Null}"
-                    Grid.Row="1"            
-                    SmallChange="0.01"
-                    Style="{StaticResource ResourceKey=BlackScrollbar}" 
-                    Value="{Binding MainData.HalfRangeValue}"
-                    IsEnabled="False"
-                    />
-                                <ScrollBar
-                    Width="60" 
-                    Visibility="{Binding BottomPSVisibility}"
-                    Minimum="{Binding MainData.MinSignalRange}"
-                    Maximum="{Binding MainData.MaxSignalRange}"
+                    Minimum="{Binding Device3.MinRange}"
+                    Maximum="{Binding Device3.MaxRange}"
                     BorderBrush="{x:Null}" 
                     Background="{x:Null}"
                     Grid.Row="1"
-                    SmallChange="0.01" 
-                    Value="{Binding MainData.BottomPS.Value,Mode=OneWay}"
+                    SmallChange="0.00000001" 
+                    Value="{Binding Device3.Setpoint,Mode=OneWay}"
                     Style="{StaticResource ResourceKey=YellowScrollbar}"
                     IsEnabled="False"
                     />
@@ -800,6 +763,7 @@
                                             HorizontalAlignment="Center"
                                             Width="auto"
                                             Height="auto"
+                                            IsChecked="{Binding Device3.Ready}"
                                             BorderThickness="1"
                                             >
                                             <CheckBox.LayoutTransform>
@@ -841,14 +805,14 @@
                                     />
                                         <TextBox
                                             Grid.Column="0"
-                                            Text="1.234"
+                                            Text="{Binding Device3.Mantisse}"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
                                             FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckFloatNumberInput"
                                             />
                                         <TextBox
                                             Grid.Column="2"
-                                            Text="5"
+                                            Text="{Binding Device3.Power}"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
                                             FontSize="18" LostFocus="CheckEmptyInput" PreviewTextInput="CheckIntNumberInput"
@@ -865,7 +829,7 @@
                                     />
                                 <TextBlock
                                     Grid.Row="4"
-                                    Text="1.348•10⁵"
+                                    Text="{Binding Device3.FullSetpoint}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="20"
@@ -894,6 +858,7 @@
                                             HorizontalAlignment="Center"
                                             Width="auto"
                                             Height="auto"
+                                            IsChecked="{Binding Device3.SetpointHold}"
                                             FontSize="70"
                                             >
                                             <CheckBox.LayoutTransform>

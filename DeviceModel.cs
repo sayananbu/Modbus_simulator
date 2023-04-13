@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Modbus.Data;
+using Modbus.Device;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Modbus_simulator
 {
@@ -18,13 +21,15 @@ namespace Modbus_simulator
     }
     public class DeviceModel: ObservableObject
     {
-        public DeviceModel(int deviceId, float maxRange, float minRange)
+        public DeviceModel(int deviceId, float maxRange, float minRange, DataStore dataStorage)
         {
             _deviceId = deviceId;
             MaxRange = maxRange;
             MinRange = minRange;
             _ready = true;
+            _data = dataStorage;
         }
+        private DataStore _data { get; set; }
         private int _deviceId;
         private SolidColorBrush _yellowColor = new SolidColorBrush(Color.FromRgb(255, 216, 0));
         private SolidColorBrush _greenColor = new SolidColorBrush(Color.FromRgb(6, 176, 37));
@@ -51,6 +56,7 @@ namespace Modbus_simulator
                 OnPropertyChanged("Value");
             }
         }
+        public float FullValue { get { return _value; } }
         private float _value;
         public float Value
         {
@@ -73,7 +79,7 @@ namespace Modbus_simulator
             }
         }
         private float _setpoint;
-        public float StrSetpoint { get { return _setpoint; } }
+        public float FullSetpoint { get { return _setpoint; } }
         public float Setpoint
         {
             get { return (float)Math.Log10(_setpoint); }
@@ -82,16 +88,17 @@ namespace Modbus_simulator
                 {
                     _setpoint = value;
                     OnPropertyChanged("Setpoint");
-                    OnPropertyChanged("StrSetpoint");
+                    OnPropertyChanged("FullSetpoint");
                 }
             }
         }
         private void CalcValue(float mantisse, int pow)
         {
-            float val = _mantisse * (float)(Math.Pow(10, _power)) > float.MaxValue ? float.MaxValue : _mantisse * (float)(Math.Pow(10, _power));
+            float val = mantisse * (float)(Math.Pow(10, pow)) > float.MaxValue ? float.MaxValue : mantisse * (float)(Math.Pow(10, pow));
             Value = val;
+            ApplyValueToRegister(val);
             Setpoint = val + val * 0.2f;
-            ColorChange = _setpoint >= _value ? _greenColor : _yellowColor;
+            ColorChange = _setpoint >= val ? _greenColor : _yellowColor;
         }
 
 
@@ -118,6 +125,26 @@ namespace Modbus_simulator
         {
             int lgth = Math.Truncate(Math.Abs(value)).ToString().Length;
             return lgth > 4 ? 0 : (float)Math.Round(value, 4 - lgth);
+        }
+        private bool IsValidIndex(int index, int size)
+        {
+            return index+1 <= size - 1 && index >=0 ? true: false;
+        }
+        private void ApplyValueToRegister(float value)
+        {
+            int register = 102 + _deviceId * 10;
+            if(IsValidIndex(register, _data?.HoldingRegisters.Count))
+            {
+                var bytesFloat = BitConverter.GetBytes(value);
+                var bytes = new Int16[] {
+                    BitConverter.ToInt16(bytesFloat, 0),
+                    BitConverter.ToInt16(bytesFloat, 2),
+                };
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    _data.HoldingRegisters[register + i] = (ushort)bytes[i];
+                }
+            }
         }
 
     }
