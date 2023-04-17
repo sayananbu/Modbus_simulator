@@ -58,6 +58,7 @@ namespace Modbus_simulator
                     Device2.UpdateValues();
                     Device3.UpdateValues();
                     slave.Listen();
+                    State.SetError();
                 }
             }
             catch
