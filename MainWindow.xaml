@@ -9,7 +9,7 @@
         Background="#FFEEDA" 
         Closing="Window_Closing" 
         MouseDown="RedirectFocus"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterScreen" Icon="/icons8-тест-64.png"
         >
     <Window.DataContext>
         <local:Wrapper/>

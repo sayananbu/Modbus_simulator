@@ -21,15 +21,19 @@ namespace Modbus_simulator
     }
     public class DeviceModel: ObservableObject
     {
-        public DeviceModel(int deviceId, float maxRange, float minRange, DataStore dataStorage)
+        public DeviceModel(int deviceId, float maxRange, float minRange)
         {
             _deviceId = deviceId;
             MaxRange = maxRange;
             MinRange = minRange;
             _ready = true;
-            _data = dataStorage;
         }
-        private DataStore _data { get; set; }
+        public static void InitSlave(ModbusSlave slave)
+        {
+            _slave= slave;
+        }
+        private static ModbusSlave _slave = null;
+        private static byte[] _wrnBits = new byte[8];
         private int _deviceId;
         private SolidColorBrush _yellowColor = new SolidColorBrush(Color.FromRgb(255, 216, 0));
         private SolidColorBrush _greenColor = new SolidColorBrush(Color.FromRgb(6, 176, 37));
@@ -98,9 +102,14 @@ namespace Modbus_simulator
             Value = val;
             ApplyValueToRegister(val);
             Setpoint = val + val * 0.2f;
+            ApplySetpointToRegister(_setpoint);
+            ApplyWarningState();
             ColorChange = _setpoint >= val ? _greenColor : _yellowColor;
         }
-
+        public void UpdateValues()
+        {
+            CalcValue(_mantisse, _power);
+        }
 
         private bool _ready;
         public bool Ready
@@ -120,30 +129,55 @@ namespace Modbus_simulator
                 OnPropertyChanged("SetpointHold");
             }
         }
-        
+        private void ApplyWarningState()
+        {
+            if (_value >= _setpoint) _wrnBits[_deviceId] = 1;
+            else _wrnBits[_deviceId] = 0;
+            if (_slave != null)
+            {
+                _slave.DataStore.HoldingRegisters[9] = (ushort)FromBitArrayToByte(_wrnBits);
+            }
+        }
+        private byte FromBitArrayToByte(byte[] array)
+        {
+            byte result = 0;
+            for (int i = 0, c = 7; i < 3; i++,c--)
+            {
+                result += (byte)(_wrnBits[i] * Math.Pow(2,7-c));
+            }
+            return result;
+        }
         private float ToFourDigits(float value)
         {
             int lgth = Math.Truncate(Math.Abs(value)).ToString().Length;
             return lgth > 4 ? 0 : (float)Math.Round(value, 4 - lgth);
         }
-        private bool IsValidIndex(int index, int size)
-        {
-            return index+1 <= size - 1 && index >=0 ? true: false;
-        }
         private void ApplyValueToRegister(float value)
         {
-            int register = 102 + _deviceId * 10;
-            if(IsValidIndex(register, _data?.HoldingRegisters.Count))
-            {
-                var bytesFloat = BitConverter.GetBytes(value);
-                var bytes = new Int16[] {
+            int register = 0x102 + _deviceId * 0x010;
+            var bytesFloat = BitConverter.GetBytes(value).Reverse().ToArray();
+            var bytes = new Int16[] {
                     BitConverter.ToInt16(bytesFloat, 0),
                     BitConverter.ToInt16(bytesFloat, 2),
                 };
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    _data.HoldingRegisters[register + i] = (ushort)bytes[i];
-                }
+            if (_slave != null)
+            {
+                _slave.DataStore.HoldingRegisters[register] = (ushort)bytes[0];
+                _slave.DataStore.HoldingRegisters[register + 1] = (ushort)bytes[1];
+            }
+        }
+        private void ApplySetpointToRegister(float value)
+        {
+            int register = 0x204 + _deviceId * 0x010;
+            var bytesFloat = BitConverter.GetBytes(value).Reverse().ToArray();
+            var bytes = new Int16[] {
+                    BitConverter.ToInt16(bytesFloat, 0),
+                    BitConverter.ToInt16(bytesFloat, 2),
+                };
+            if (_slave != null)
+            {
+                _slave.DataStore.HoldingRegisters[register] = (ushort)bytes[0];
+                _slave.DataStore.HoldingRegisters[register + 1] = (ushort)bytes[1];
             }
         }
 

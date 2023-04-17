@@ -19,16 +19,15 @@ namespace Modbus_simulator
         public DeviceModel Device3 { get; private set; }
         
         Thread flow;
-        ModbusSlave slave;
-        DataStore middlewareDataStorage = DataStoreFactory.CreateDefaultDataStore();
+        ModbusSlave slave = null;
         public Wrapper()
         {
             var Top = (float)Math.Log10(2 * Math.Pow(10, 7));
             var Low = (float)Math.Log10(1 * Math.Pow(10,-1));
             State = new ConnectionState();
-            Device1 = new DeviceModel(0, Top, Low, slave?.DataStore);
-            Device2 = new DeviceModel(1, Top, Low, slave?.DataStore);
-            Device3 = new DeviceModel(2, (float)Math.Log10(2 * Math.Pow(10, 4)), (float)Math.Log10(1 * Math.Pow(10, -2)), slave?.DataStore);
+            Device1 = new DeviceModel(0, Top, Low);
+            Device2 = new DeviceModel(1, Top, Low);
+            Device3 = new DeviceModel(2, (float)Math.Log10(2 * Math.Pow(10, 4)), (float)Math.Log10(1 * Math.Pow(10, -2)));
         }
         public void DisposeConnection()
         {
@@ -42,6 +41,7 @@ namespace Modbus_simulator
                 flow = new Thread(() => SlaveThread(port, baud));
                 flow.Start();
             }
+            Thread.Sleep(50);
         }
         private void SlaveThread(string port, string baud)
         {
@@ -53,8 +53,10 @@ namespace Modbus_simulator
                     State.SetSuccess();
                     byte unitID = 1;
                     slave = ModbusSerialSlave.CreateRtu(unitID, slavePort);
-                    //slave.DataStore = DataStoreFactory.CreateDefaultDataStore();
-                    middlewareDataStorage = slave.DataStore;
+                    DeviceModel.InitSlave(slave);
+                    Device1.UpdateValues();
+                    Device2.UpdateValues();
+                    Device3.UpdateValues();
                     slave.Listen();
                 }
             }
