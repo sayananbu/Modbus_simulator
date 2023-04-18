@@ -27,13 +27,15 @@ namespace Modbus_simulator
             MaxRange = maxRange;
             MinRange = minRange;
             _ready = true;
+            CalcValue(_mantisse, _power);
         }
         public static void InitSlave(ModbusSlave slave)
         {
             _slave= slave;
         }
         private static ModbusSlave _slave = null;
-        private static byte[] _wrnBits = new byte[8];
+        private static byte[] _wrnBits = new byte[3];
+        private static byte[] _rdyBits = new byte[3];
         private int _deviceId;
         private SolidColorBrush _yellowColor = new SolidColorBrush(Color.FromRgb(255, 216, 0));
         private SolidColorBrush _greenColor = new SolidColorBrush(Color.FromRgb(6, 176, 37));
@@ -104,7 +106,8 @@ namespace Modbus_simulator
             Setpoint = val + val * 0.2f;
             ApplySetpointToRegister(_setpoint);
             ApplyWarningState();
-            ColorChange = _setpoint >= val ? _greenColor : _yellowColor;
+            ApplyReadyState();
+            ColorChange = _setpoint > val ? _greenColor : _yellowColor;
         }
         public void UpdateValues()
         {
@@ -116,6 +119,7 @@ namespace Modbus_simulator
         {
             get { return _ready; }
             set { _ready = value;
+                ApplyReadyState();
                 OnPropertyChanged("Ready");
                 }
         }
@@ -135,15 +139,25 @@ namespace Modbus_simulator
             else _wrnBits[_deviceId] = 0;
             if (_slave != null)
             {
-                _slave.DataStore.HoldingRegisters[9] = (ushort)FromBitArrayToByte(_wrnBits);
+                _slave.DataStore.HoldingRegisters[0xA] = (ushort)FromBitArrayToByte(_wrnBits);
+            }
+        }
+        private void ApplyReadyState()
+        {
+            if (!_ready) _rdyBits[_deviceId] = 1;
+            else _rdyBits[_deviceId] = 0;
+            if (_slave != null)
+            {
+                var bytes = BitConverter.GetBytes((ushort)FromBitArrayToByte(_rdyBits)).Reverse().ToArray();
+                _slave.DataStore.HoldingRegisters[1] = (ushort)BitConverter.ToInt16(bytes,0);
             }
         }
         private byte FromBitArrayToByte(byte[] array)
         {
             byte result = 0;
-            for (int i = 0, c = 7; i < 3; i++,c--)
+            for (int i = 0, c = 7; i < array.Length; i++,c--)
             {
-                result += (byte)(_wrnBits[i] * Math.Pow(2,7-c));
+                result += (byte)(array[i] * Math.Pow(2,7-c));
             }
             return result;
         }
@@ -154,7 +168,7 @@ namespace Modbus_simulator
         }
         private void ApplyValueToRegister(float value)
         {
-            int register = 0x102 + _deviceId * 0x010;
+            int register = 0x103 + _deviceId * 0x010;
             var bytesFloat = BitConverter.GetBytes(value).Reverse().ToArray();
             var bytes = new Int16[] {
                     BitConverter.ToInt16(bytesFloat, 0),
@@ -168,7 +182,7 @@ namespace Modbus_simulator
         }
         private void ApplySetpointToRegister(float value)
         {
-            int register = 0x204 + _deviceId * 0x010;
+            int register = 0x205 + _deviceId * 0x010;
             var bytesFloat = BitConverter.GetBytes(value).Reverse().ToArray();
             var bytes = new Int16[] {
                     BitConverter.ToInt16(bytesFloat, 0),

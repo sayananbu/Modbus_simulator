@@ -26,7 +26,7 @@ namespace Modbus_simulator
     {
         string[] bauds =
         {
-            "2400", "4800", "9600", "14400", "19200", "38400", "56000", "57600"
+            "9600", "14400", "19200", "38400", "56000", "57600","115200"
         };
         public MainWindow()
         {
@@ -86,5 +86,11 @@ namespace Modbus_simulator
             if (cleanText.Length < 2 && cleanText.Contains("-")) cleanText = cleanText.Replace("-", string.Empty);
             textbox.Text = cleanText.Length != 0 ? cleanText : "0";
         }
+
+        private void CloseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ((Wrapper)this.DataContext).DisposeConnection();
+        }
+
     }
 }

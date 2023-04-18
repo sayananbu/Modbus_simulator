@@ -9,7 +9,7 @@
         Background="#FFEEDA" 
         Closing="Window_Closing" 
         MouseDown="RedirectFocus"
-        WindowStartupLocation="CenterScreen" Icon="/icons8-тест-64.png"
+        WindowStartupLocation="CenterScreen" Icon="/icons8-тест-64.png" ResizeMode="NoResize"
         >
     <Window.DataContext>
         <local:Wrapper/>
@@ -188,6 +188,26 @@
                 </ComboBox>
             </Grid>
         </Border>
+        <Button
+            x:Name="CloseBtn"
+            Grid.Column="2"
+            Grid.Row="1"
+            Content="Close"
+            Margin="-40 10 10 10"
+            Width="100"
+            HorizontalAlignment="Left"
+            Background="#fff"
+            FontSize="25"
+            FontFamily="Inter"
+            BorderThickness="1" 
+            BorderBrush="Black" Click="CloseBtn_Click" 
+            >
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Button.Resources>
+        </Button>
 
         <Border
             Grid.Column="0"

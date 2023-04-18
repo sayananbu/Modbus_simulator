@@ -20,6 +20,7 @@ namespace Modbus_simulator
         
         Thread flow;
         ModbusSlave slave = null;
+        private bool isDisposed = true;
         public Wrapper()
         {
             var Top = (float)Math.Log10(2 * Math.Pow(10, 7));
@@ -32,14 +33,15 @@ namespace Modbus_simulator
         public void DisposeConnection()
         {
             slave?.Dispose();
+            isDisposed= true;
         }
         public void CreateConnection(string port, string baud)
         {
-            if (port.Length != 0)
+            if (port.Length != 0 && isDisposed)
             {
-                slave?.Dispose();
                 flow = new Thread(() => SlaveThread(port, baud));
                 flow.Start();
+                isDisposed = false;
             }
             Thread.Sleep(50);
         }
